@@ -20,4 +20,3 @@
 
 **What else is in the repo that the page does not link:** `desk.txt` is a project file that the page does not link to. The README describes it as a desk note.
 
-**Architecture sketch:** Browser form → Express `POST /` route → Node.js `exec` starts `ping` → Express builds an HTML response → browser displays the result. Express also serves the static CSS from `public/`; `GET /health` returns a JSON health response.
