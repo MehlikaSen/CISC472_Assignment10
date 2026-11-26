@@ -2,6 +2,8 @@
 
 # OS Command Injection
 
+**Note:** The vulnerability and trigger below describe the app before the patch. The current version validates the host and runs `ping` with `execFile`, without a shell.
+
 **Location:** `server.js`, `app.post("/")` (lines 76–81)
 
 **Trigger:** Submitting crafted input in the Host field. The value is interpolated directly into a shell command without validation or being passed as a separate argument.
@@ -19,4 +21,3 @@
 **What a reply looks like when the host answers and when it does not:** If the ping command succeeds, the page displays the host, an “up” status, and the command output. If it fails or times out, the page displays a “down” status and the error or ping output. The result is displayed in the response page; it is not stored as a persistent check history. The “Recent checks” rows are examples hard-coded in the server.
 
 **What else is in the repo that the page does not link:** `desk.txt` is a project file that the page does not link to. The README describes it as a desk note.
-

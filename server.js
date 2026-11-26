@@ -1,5 +1,6 @@
 const express = require("express");
-const { exec } = require("child_process");
+const { execFile } = require("child_process");
+const net = require("net");
 const path = require("path");
 const fs = require("fs");
 
@@ -78,7 +79,11 @@ app.post("/", (req, res) => {
   if (!host) {
     return res.status(400).type("html").send(page("Host is required.", null));
   }
-  exec(`ping -c 1 -W 2 ${host}`, { timeout: 4000 }, (err, stdout, stderr) => {
+  const isHostname = /^(?=.{1,253}\.?$)(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)(?:\.(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?))*\.?$/.test(host);
+  if (!net.isIP(host) && !isHostname) {
+    return res.status(400).type("html").send(page("Enter a valid hostname or IP address.", null));
+  }
+  execFile("ping", ["-c", "1", "-W", "2", host], { timeout: 4000 }, (err, stdout, stderr) => {
     const detail = (stdout || stderr || (err && err.message) || "no reply").slice(0, 800);
     const status = err ? "down" : "up";
     res.type("html").send(page(null, { host, status, detail }));
